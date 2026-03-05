@@ -1,6 +1,49 @@
 import type { Request, Response } from "express";
 import { pool } from "../../config/db";
 import bcrypt from "bcrypt";
+import { generateToken } from "../../utils/jwt";
+
+export const login = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+
+  try {
+    const result = await pool.query(
+      `SELECT users.*, roles.name as role
+       FROM users
+       JOIN roles ON users.role_id = roles.id
+       WHERE email = $1`,
+      [email],
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const user = result.rows[0];
+
+    const match = await bcrypt.compare(password, user.password);
+
+    if (!match) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const token = generateToken({
+      id: user.id,
+      role: user.role,
+    });
+
+    res.json({
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        role: user.role,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 export const register = async (req: Request, res: Response) => {
   const { name, email, password, role } = req.body;
