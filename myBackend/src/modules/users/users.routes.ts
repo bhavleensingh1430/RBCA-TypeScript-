@@ -62,12 +62,13 @@ router.post("/", authenticate, authorize("admin", "manager"), createUser);
  *         schema:
  *           type: string
  *           enum: [all, admin, manager, client]
- *         required: false
+ *         required: true
  *         description: Filter users by role
  *     responses:
  *       201:
  *         description: User Displayed successfully
  */
-router.get("/", authenticate, authorize("admin"), getUsers);
+router.get("/", authenticate, authorize("admin", "manager", "client"), getUsers);
+
 
 export default router;
