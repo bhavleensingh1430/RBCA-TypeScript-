@@ -8,35 +8,43 @@ const options = {
     info: {
       title: "RBAC API",
       version: "1.0.0",
-      description: "RBAC Dashboard Backend APIs"
+      description: "RBAC Dashboard Backend APIs",
     },
     servers: [
       {
-        url: "http://localhost:3000"
-      }
+        url: "http://localhost:3000",
+      },
     ],
     components: {
       securitySchemes: {
         bearerAuth: {
           type: "http",
           scheme: "bearer",
-          bearerFormat: "JWT"
-        }
-      }
+          bearerFormat: "JWT",
+        },
+      },
     },
     security: [
       {
-        bearerAuth: []
-      }
-    ]
+        bearerAuth: [],
+      },
+    ],
   },
 
   // VERY IMPORTANT
-  apis: ["src/modules/**/*.ts"]
+  apis: ["src/modules/**/*.ts"],
 };
 
 const swaggerSpec = swaggerJsdoc(options);
 
 export const setupSwagger = (app: Express) => {
-  app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  app.use(
+    "/docs",
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerSpec, {
+      swaggerOptions: {
+        persistAuthorization: true,
+      },
+    }),
+  );
 };

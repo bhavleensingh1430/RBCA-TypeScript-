@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { register, login } from "./authController";
+import { register, login } from "./auth.controller";
 
 const router = Router();
 
@@ -18,10 +18,13 @@ const router = Router();
  *             properties:
  *               name:
  *                 type: string
+ *                 example: Bhavleen Singh
  *               email:
  *                 type: string
+ *                 example: bhavleensingh45@gmail.com
  *               password:
  *                 type: string
+ *                 example: Bhavii@
  *               role:
  *                 type: string
  *                 example: admin
@@ -46,8 +49,10 @@ router.post("/register", register);
  *             properties:
  *               email:
  *                 type: string
+ *                 example: bhavleensingh45@gmail.com
  *               password:
  *                 type: string
+ *                 example: Bhavii@
  *     responses:
  *       200:
  *         description: JWT token returned

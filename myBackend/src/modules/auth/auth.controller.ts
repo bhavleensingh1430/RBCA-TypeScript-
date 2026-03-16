@@ -3,6 +3,11 @@ import { pool } from "../../config/db";
 import bcrypt from "bcrypt";
 import { generateToken } from "../../utils/jwt";
 
+
+
+
+
+
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
