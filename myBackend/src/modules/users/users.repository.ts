@@ -16,17 +16,41 @@ export const createUserRepo = async (
 
   return result.rows[0];
 };
-export const getAllUsersRepo = async () => {
-  const result = await pool.query(`
+
+export const getAllUsersRepo = async (role?: string) => {
+
+  console.log("ROLE RECEIVED IN REPO:", role);
+
+  let baseQuery = `
     SELECT u.id,
            u.name,
            u.email,
            r.name as role
     FROM users u
     JOIN roles r ON u.role_id = r.id
-  `);
+  `;
 
-  
+  // 👉 IMPORTANT FIX
+  if (role && role !== "all") {
+
+    const result = await pool.query(
+      baseQuery + " WHERE r.name = $1",
+      [role]
+    );
+
+    return result.rows;
+  }
+
+  const result = await pool.query(baseQuery);
 
   return result.rows;
 };
+
+export const getUserRepoById = async (id: Number) =>{
+  let baseQuery = `
+    SELECT * FROM users WHERE id = ${id}`;
+  const result = await pool.query(baseQuery);
+
+return result.rows;
+
+}

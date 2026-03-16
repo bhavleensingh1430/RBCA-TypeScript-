@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser, getUsers } from "./users.controller";
+import { createUser, getUsers, getUserById } from "./users.controller";
 import { authenticate } from "../../middleware/auth.middleware";
 import { authorize } from "../../middleware/role.middleware";
 
@@ -62,13 +62,47 @@ router.post("/", authenticate, authorize("admin", "manager"), createUser);
  *         schema:
  *           type: string
  *           enum: [all, admin, manager, client]
- *         required: true
+ *         required: false
  *         description: Filter users by role
  *     responses:
  *       201:
  *         description: User Displayed successfully
  */
-router.get("/", authenticate, authorize("admin", "manager", "client"), getUsers);
+router.get(
+  "/",
+  authenticate,
+  authorize("admin", "manager", "client"),
+  getUsers,
+);
 
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Get user by id
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: User fetched successfully
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: User not found
+ */
+router.get(
+  "/:id",
+  authenticate,
+  authorize("admin","manager","client"),
+  getUserById
+);
 
 export default router;
