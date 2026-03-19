@@ -18,7 +18,6 @@ export const createUserRepo = async (
 };
 
 export const getAllUsersRepo = async (role?: string) => {
-
   console.log("ROLE RECEIVED IN REPO:", role);
 
   let baseQuery = `
@@ -32,11 +31,7 @@ export const getAllUsersRepo = async (role?: string) => {
 
   // 👉 IMPORTANT FIX
   if (role && role !== "all") {
-
-    const result = await pool.query(
-      baseQuery + " WHERE r.name = $1",
-      [role]
-    );
+    const result = await pool.query(baseQuery + " WHERE r.name = $1", [role]);
 
     return result.rows;
   }
@@ -46,11 +41,15 @@ export const getAllUsersRepo = async (role?: string) => {
   return result.rows;
 };
 
-export const getUserRepoById = async (id: Number) =>{
-  let baseQuery = `
-    SELECT * FROM users WHERE id = ${id}`;
-  const result = await pool.query(baseQuery);
+export const getUserRepoById = async (id: number) => {
+  const result = await pool.query(`SELECT * FROM users WHERE id = $1`, [id]);
 
-return result.rows;
+  return result.rows;
+};
 
-}
+export const deleteUserRepoById = async (id: Number) => {
+  console.log("Repo");
+  const result = await pool.query(`DELETE FROM users WHERE id=$1`, [id]);
+  console.log(result, "From deleteUserRepoById");
+  return result.rowCount;
+};

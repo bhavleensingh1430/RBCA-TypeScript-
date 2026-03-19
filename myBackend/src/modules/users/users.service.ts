@@ -1,6 +1,11 @@
 import bcrypt from "bcrypt";
 import { pool } from "../../config/db";
-import { createUserRepo, getAllUsersRepo, getUserRepoById} from "./users.repository";
+import {
+  createUserRepo,
+  getAllUsersRepo,
+  getUserRepoById,
+  deleteUserRepoById,
+} from "./users.repository";
 
 export const createUserService = async (data: any, loggedUser: any) => {
   const { name, email, password, role, manager_id } = data;
@@ -22,11 +27,15 @@ export const createUserService = async (data: any, loggedUser: any) => {
   return createUserRepo(name, email, hashedPassword, role_id, managerId);
 };
 
-export const getAllUsersService = async (role: any) => {
+export const getAllUsersService = async (role: string) => {
   console.log("Entered in Service");
   return getAllUsersRepo(role);
 };
 
-export const getUserServiceById = async (id: any) => {
+export const getUserServiceById = async (id: number) => {
   return getUserRepoById(id);
+};
+
+export const deleteUserServiceById = async (id: number) => {
+  return deleteUserRepoById(id);
 };

@@ -1,5 +1,10 @@
 import { Router } from "express";
-import { createUser, getUsers, getUserById } from "./users.controller";
+import {
+  createUser,
+  getUsers,
+  getUserById,
+  deleteUserById,
+} from "./users.controller";
 import { authenticate } from "../../middleware/auth.middleware";
 import { authorize } from "../../middleware/role.middleware";
 
@@ -101,8 +106,65 @@ router.get(
 router.get(
   "/:id",
   authenticate,
-  authorize("admin","manager","client"),
-  getUserById
+  authorize("admin", "manager", "client"),
+  getUserById,
 );
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   get:
+ *     summary: Get user by ID
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: User fetched successfully
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: User not found
+ */
+router.get(
+  "/:id",
+  authenticate,
+  authorize("admin", "manager", "client"),
+  getUserById,
+);
+
+/**
+ * @swagger
+ * /users/{id}:
+ *   delete:
+ *     summary: Get user by ID
+ *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: User fetched successfully
+ *       204:
+ *         description: User fetched successfully
+ *       403:
+ *         description: Forbidden
+ *       404:
+ *         description: User not found
+ */
+router.delete("/:id", authenticate, authorize("admin"), deleteUserById);
 
 export default router;
