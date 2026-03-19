@@ -79,7 +79,7 @@ router.get(
  * @swagger
  * /users/{id}:
  *   get:
- *     summary: Get user by id
+ *     summary: Get user by ID
  *     tags: [Users]
  *     security:
  *       - bearerAuth: []
